@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 // Limites de upload (o navegador também valida, mas quem manda é o servidor)
 export const LIMITS = {
@@ -21,6 +21,23 @@ export function uploadKind(pathname) {
 export function clientIp(request) {
   const fwd = request.headers.get("x-forwarded-for");
   return (fwd ? fwd.split(",")[0] : request.headers.get("x-real-ip") || "").trim() || "desconhecido";
+}
+
+// Compara um parâmetro da URL com um segredo em tempo constante
+export function secretMatches(given, secret) {
+  const a = Buffer.from(given || ""), b = Buffer.from(secret || "");
+  return b.length >= 12 && a.length === b.length && timingSafeEqual(a, b);
+}
+
+// Compras aprovadas (webhook da Kiwify) ficam em pagos/ indexadas por e-mail e por WhatsApp
+const sha = s => createHash("sha256").update(s).digest("hex").slice(0, 40);
+export const normEmail = e => String(e || "").trim().toLowerCase();
+export const normPhone = w => String(w || "").replace(/\D/g, "").slice(-11); // DDD + número
+export function pagoKeys(email, whatsapp) {
+  const keys = [];
+  if (normEmail(email)) keys.push(`pagos/e-${sha(normEmail(email))}.json`);
+  if (normPhone(whatsapp).length >= 10) keys.push(`pagos/w-${sha(normPhone(whatsapp))}.json`);
+  return keys;
 }
 
 // Chave do painel em ADMIN_KEY (variável de ambiente na Vercel)
@@ -68,6 +85,9 @@ export function pedidoMessage(p, origin) {
     `*E-mail:* ${p.email}`,
     `*Pedido Kiwify:* ${p.pedido || "—"}`,
     `*Pacote:* ${pacoteLabel(p.pacote)}`,
+    p.pagamento?.confirmado
+      ? `💳 *Pagamento:* ✅ confirmado na Kiwify (${p.pagamento.produto || "produto"}${p.pagamento.pedido ? ", pedido " + p.pagamento.pedido : ""})`
+      : `💳 *Pagamento:* ⚠️ NÃO encontrado na Kiwify, confira em Vendas`,
     "",
     `*Produto:* ${p.produto}`,
     `*O que faz:* ${p.oQueFaz}`,

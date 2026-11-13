@@ -1,10 +1,21 @@
 import { get, head, put } from "@vercel/blob";
-import { CONSENT_TEXT, clientIp, emailPedido, json, notifyWhatsApp, pedidoMessage, validateEnvio } from "./_lib.js";
+import { CONSENT_TEXT, clientIp, emailPedido, json, notifyWhatsApp, pagoKeys, pedidoMessage, validateEnvio } from "./_lib.js";
 
 const readFile = async path => {
   const r = await get(path, { access: "private" });
   return Buffer.from(await new Response(r.stream).arrayBuffer());
 };
+
+// Procura a compra aprovada pelo e-mail ou WhatsApp (gravada pelo /api/kiwify)
+async function findPagamento(email, whatsapp) {
+  for (const key of pagoKeys(email, whatsapp)) {
+    try {
+      const r = await get(key, { access: "private", useCache: false });
+      if (r?.statusCode === 200) return { confirmado: true, ...JSON.parse(await new Response(r.stream).text()) };
+    } catch { /* não encontrado */ }
+  }
+  return { confirmado: false };
+}
 
 // Recebe o formulário do /enviar e grava o pedido (com o registro do aceite) no Blob privado
 export async function POST(request) {
@@ -26,6 +37,7 @@ export async function POST(request) {
   const pedido = {
     ...data,
     recebidoEm: now.toISOString(),
+    pagamento: await findPagamento(data.email, data.whatsapp),
     aceite: {
       texto: CONSENT_TEXT,
       dataHora: now.toISOString(),

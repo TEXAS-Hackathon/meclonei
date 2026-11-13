@@ -32,6 +32,7 @@ export async function GET(request) {
         <div>
           <p><a href="https://wa.me/${esc(p.whatsapp)}" target="_blank">WhatsApp ${esc(p.whatsapp)}</a> · ${esc(p.email)}</p>
           <p><b>Pedido Kiwify:</b> ${esc(p.pedido) || "—"}</p>
+          <p><b>Pagamento:</b> ${p.pagamento?.confirmado ? `✅ confirmado (${esc(p.pagamento.produto)})` : p.pagamento ? "⚠️ não encontrado na Kiwify" : "—"}</p>
           <p><b>Produto:</b> ${esc(p.produto)}</p>
           <p><b>O que faz:</b> ${esc(p.oQueFaz)}</p>
           <p><b>Benefício:</b> ${esc(p.beneficio)}</p>
