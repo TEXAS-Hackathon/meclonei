@@ -205,6 +205,7 @@
     <div class="ok">✓</div>
     <h1>Recebemos!</h1>
     <p>Seu vídeo chega em até 48h no seu WhatsApp.</p>
+    <a class="btn btn-ghost" id="waDone" target="_blank" rel="noopener" style="margin-top:26px">Ficou com dúvida? Fale com a gente no WhatsApp</a>
   </div>
 </div>
 
@@ -215,6 +216,7 @@ const MAX_SELFIE = 10 * 1024 * 1024, MAX_AUDIO = 30 * 1024 * 1024;
 const $ = id => document.getElementById(id);
 
 $("waHelp").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Comprei no MeClonei e tive problema pra enviar minha foto/voz.")}`;
+$("waDone").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Acabei de enviar minha foto e voz no MeClonei e tenho uma dúvida.")}`;
 
 /* Preenche com o que vier na URL (página de obrigado da Kiwify) */
 const q = new URLSearchParams(location.search);

@@ -1,4 +1,4 @@
-import { timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 // Limites de upload (o navegador também valida, mas quem manda é o servidor)
 export const LIMITS = {
@@ -30,6 +30,57 @@ export function isAdmin(request) {
   return timingSafeEqual(Buffer.from(given), Buffer.from(expected));
 }
 
+// Link assinado para UM arquivo (pode ser encaminhado sem expor o painel inteiro)
+export function signFile(pathname) {
+  return createHmac("sha256", process.env.ADMIN_KEY || "").update(pathname).digest("hex").slice(0, 32);
+}
+export function hasFileSig(request, pathname) {
+  const t = new URL(request.url).searchParams.get("t") || "";
+  const expected = signFile(pathname);
+  return (process.env.ADMIN_KEY || "").length >= 12 && t.length === expected.length &&
+    timingSafeEqual(Buffer.from(t), Buffer.from(expected));
+}
+
+// Avisa no WhatsApp do dono via CallMeBot (CALLMEBOT_PHONE + CALLMEBOT_APIKEY na Vercel)
+export async function notifyWhatsApp(text) {
+  const phone = process.env.CALLMEBOT_PHONE, apikey = process.env.CALLMEBOT_APIKEY;
+  if (!phone || !apikey) return false;
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(text)}&apikey=${encodeURIComponent(apikey)}`;
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!r.ok) console.error("[whatsapp] CallMeBot respondeu", r.status);
+    return r.ok;
+  } catch (e) {
+    console.error("[whatsapp] falha ao avisar", e.message);
+    return false;
+  }
+}
+
+export function pedidoMessage(p, origin) {
+  const link = path => `${origin}/api/arquivo?p=${encodeURIComponent(path)}&t=${signFile(path)}`;
+  const roteiro = p.querRoteiro ? "quer que a gente escreva" : p.roteiro.slice(0, 900);
+  return [
+    "🎬 *Novo pedido MeClonei*",
+    "",
+    `*Nome:* ${p.nome}`,
+    `*WhatsApp:* https://wa.me/${p.whatsapp}`,
+    `*E-mail:* ${p.email}`,
+    `*Pedido Kiwify:* ${p.pedido || "—"}`,
+    `*Pacote:* Vídeo ${p.pacote}`,
+    "",
+    `*Produto:* ${p.produto}`,
+    `*O que faz:* ${p.oQueFaz}`,
+    `*Benefício:* ${p.beneficio}`,
+    `*Tom:* ${p.tom}`,
+    `*Roteiro:* ${roteiro}`,
+    "",
+    `📷 Selfie: ${link(p.selfie)}`,
+    `🎙️ Voz (~${Math.round(p.audioSegundos || 0)}s): ${link(p.audio)}`,
+    "",
+    `✅ Autorização aceita em ${new Date(p.aceite.dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`,
+  ].join("\n");
+}
+
 const str = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 // Valida e normaliza o envio do formulário. Retorna { data } ou { error }.
@@ -54,6 +105,7 @@ export function validateEnvio(body) {
   if (!d.nome) return { error: "Informe seu nome." };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return { error: "E-mail inválido." };
   if (d.whatsapp.length < 10 || d.whatsapp.length > 13) return { error: "WhatsApp inválido. Use DDD + número." };
+  if (d.whatsapp.length <= 11) d.whatsapp = "55" + d.whatsapp; // DDD + número -> padrão internacional
   if (!PACOTES.includes(d.pacote)) return { error: "Escolha o pacote." };
   if (!d.produto || !d.oQueFaz || !d.beneficio) return { error: "Preencha as informações do produto." };
   if (!d.querRoteiro && !d.roteiro) return { error: "Escreva o roteiro ou marque que quer que a gente escreva." };

@@ -1,5 +1,5 @@
 import { head, put } from "@vercel/blob";
-import { CONSENT_TEXT, clientIp, json, validateEnvio } from "./_lib.js";
+import { CONSENT_TEXT, clientIp, json, notifyWhatsApp, pedidoMessage, validateEnvio } from "./_lib.js";
 
 // Recebe o formulário do /enviar e grava o pedido (com o registro do aceite) no Blob privado
 export async function POST(request) {
@@ -39,5 +39,7 @@ export async function POST(request) {
     console.error("[enviar] falha ao salvar", e);
     return json({ error: "Não conseguimos salvar agora. Tente de novo em instantes." }, 500);
   }
+  // Pedido já está salvo; se o aviso falhar, ele continua no painel /api/pedidos
+  await notifyWhatsApp(pedidoMessage(pedido, new URL(request.url).origin));
   return json({ ok: true });
 }
