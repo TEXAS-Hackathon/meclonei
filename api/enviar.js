@@ -1,5 +1,10 @@
-import { head, put } from "@vercel/blob";
-import { CONSENT_TEXT, clientIp, json, notifyWhatsApp, pedidoMessage, validateEnvio } from "./_lib.js";
+import { get, head, put } from "@vercel/blob";
+import { CONSENT_TEXT, clientIp, emailPedido, json, notifyWhatsApp, pedidoMessage, validateEnvio } from "./_lib.js";
+
+const readFile = async path => {
+  const r = await get(path, { access: "private" });
+  return Buffer.from(await new Response(r.stream).arrayBuffer());
+};
 
 // Recebe o formulário do /enviar e grava o pedido (com o registro do aceite) no Blob privado
 export async function POST(request) {
@@ -41,7 +46,8 @@ export async function POST(request) {
   }
   // Pedido já está salvo; se o aviso falhar, ele continua no painel /api/pedidos
   const resumo = pedidoMessage(pedido, new URL(request.url).origin);
-  await notifyWhatsApp(resumo); // só envia se o CallMeBot estiver configurado
+  // avisos (cada um só roda se estiver configurado na Vercel); falha de aviso não perde o pedido
+  await Promise.all([notifyWhatsApp(resumo), emailPedido(pedido, resumo, readFile)]);
   // O resumo volta pro cliente mandar no WhatsApp da loja (links assinados só dos arquivos dele)
   return json({ ok: true, resumo });
 }

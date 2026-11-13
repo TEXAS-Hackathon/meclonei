@@ -123,3 +123,42 @@ export const json = (obj, status = 200) =>
 
 export const esc = s =>
   String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+// E-mail do pedido com selfie e áudio anexados, via Resend (RESEND_API_KEY + NOTIFY_EMAIL na Vercel)
+const MAX_ATTACH_BYTES = 35 * 1024 * 1024; // Resend aceita até 40 MB por e-mail
+export async function emailPedido(p, resumo, readFile) {
+  const apiKey = process.env.RESEND_API_KEY, to = process.env.NOTIFY_EMAIL;
+  if (!apiKey || !to) return false;
+  const attachments = [];
+  try {
+    let total = 0;
+    for (const path of [p.selfie, p.audio]) {
+      const buf = await readFile(path);
+      total += buf.length;
+      if (total > MAX_ATTACH_BYTES) break; // grande demais: fica só o link no corpo do e-mail
+      attachments.push({ filename: path.split("/").pop(), content: buf.toString("base64") });
+    }
+  } catch (e) {
+    console.error("[email] falha ao ler anexos", e.message);
+  }
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM || "MeClonei <onboarding@resend.dev>",
+        to: to.split(",").map(s => s.trim()).filter(Boolean),
+        reply_to: p.email,
+        subject: `Novo pedido MeClonei: ${p.nome} (${pacoteLabel(p.pacote)})`,
+        text: resumo.replace(/\*/g, ""),
+        attachments,
+      }),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!r.ok) console.error("[email] Resend respondeu", r.status, await r.text());
+    return r.ok;
+  } catch (e) {
+    console.error("[email] falha ao enviar", e.message);
+    return false;
+  }
+}

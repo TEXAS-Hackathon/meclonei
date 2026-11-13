@@ -306,6 +306,40 @@ $("audioFile").addEventListener("change", e => {
 /* Roteiro opcional */
 $("querRoteiro").addEventListener("change", e => { $("roteiro").disabled = e.target.checked; });
 
+/* Converte a voz pra MP3 no próprio aparelho (abre em qualquer player). Falhou? Sobe o original. */
+function loadLame() {
+  if (window.lamejs) return Promise.resolve(window.lamejs);
+  return new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js";
+    s.onload = () => (window.lamejs ? ok(window.lamejs) : fail(new Error("lamejs não carregou")));
+    s.onerror = () => fail(new Error("lamejs não carregou"));
+    document.head.appendChild(s);
+  });
+}
+async function toMp3(blob) {
+  if ((blob.type || "").startsWith("audio/mpeg")) return blob;
+  const lame = await loadLame();
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctx = new Ctx();
+  const buf = await ctx.decodeAudioData(await blob.arrayBuffer());
+  ctx.close?.();
+  const ch0 = buf.getChannelData(0), ch1 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : null;
+  const pcm = new Int16Array(ch0.length);
+  for (let i = 0; i < ch0.length; i++) {
+    const v = ch1 ? (ch0[i] + ch1[i]) / 2 : ch0[i];
+    pcm[i] = Math.max(-1, Math.min(1, v)) * 0x7fff;
+  }
+  const enc = new lame.Mp3Encoder(1, buf.sampleRate, 128);
+  const out = [];
+  for (let i = 0; i < pcm.length; i += 1152) {
+    const chunk = enc.encodeBuffer(pcm.subarray(i, i + 1152));
+    if (chunk.length) out.push(new Uint8Array(chunk));
+  }
+  const end = enc.flush(); if (end.length) out.push(new Uint8Array(end));
+  return new Blob(out, { type: "audio/mpeg" });
+}
+
 /* Envio */
 function validate() {
   const v = id => $(id).value.trim();
@@ -348,10 +382,12 @@ $("form").addEventListener("submit", async e => {
       access: "private", handleUploadUrl: "/api/upload",
       onUploadProgress: ev => prog("Enviando sua selfie…", 5 + ev.percentage * .3),
     });
+    prog("Preparando seu áudio…", 33);
+    const voz = await toMp3(audioBlob).catch(err => { console.warn("[mp3] mantendo original:", err); return audioBlob; });
     prog("Enviando seu áudio…", 35);
-    const a = await upload(`envios/audio-${id}.${ext(audioBlob, "webm")}`, audioBlob, {
-      access: "private", handleUploadUrl: "/api/upload", multipart: audioBlob.size > 8 * 1024 * 1024,
-      contentType: (audioBlob.type || "audio/webm").split(";")[0],
+    const a = await upload(`envios/audio-${id}.${ext(voz, "webm")}`, voz, {
+      access: "private", handleUploadUrl: "/api/upload", multipart: voz.size > 8 * 1024 * 1024,
+      contentType: (voz.type || "audio/webm").split(";")[0],
       onUploadProgress: ev => prog("Enviando seu áudio…", 35 + ev.percentage * .55),
     });
     prog("Finalizando…", 95);
