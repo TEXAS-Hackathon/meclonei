@@ -204,8 +204,10 @@
   <div class="done" id="done" role="status">
     <div class="ok">✓</div>
     <h1>Recebemos!</h1>
-    <p>Seu vídeo chega em até 48h no seu WhatsApp.</p>
-    <a class="btn btn-ghost" id="waDone" target="_blank" rel="noopener" style="margin-top:26px">Ficou com dúvida? Fale com a gente no WhatsApp</a>
+    <p>Falta só um toque: <b style="color:var(--text)">confirme seu pedido no nosso WhatsApp</b> pra gente começar a produção.</p>
+    <a class="btn btn-wa" id="waConfirm" target="_blank" rel="noopener" style="margin-top:26px;width:100%;max-width:420px;background:#25d366;color:#06240f">Confirmar pedido no WhatsApp</a>
+    <p style="font-size:14px;margin-top:14px">Seu vídeo chega em até 48h nessa mesma conversa.</p>
+    <a class="btn btn-ghost" id="waDone" target="_blank" rel="noopener" style="margin-top:18px">Ficou com dúvida? Fale com a gente</a>
   </div>
 </div>
 
@@ -365,6 +367,7 @@ $("form").addEventListener("submit", async e => {
     const out = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(out.error || "Não conseguimos concluir o envio.");
     prog("Pronto!", 100);
+    $("waConfirm").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(out.resumo || "Olá! Acabei de enviar meu pedido no MeClonei.")}`;
     $("form").style.display = "none"; $("done").style.display = "block"; window.scrollTo(0, 0);
   } catch (err) {
     console.error(err);

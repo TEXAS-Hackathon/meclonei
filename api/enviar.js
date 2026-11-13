@@ -40,6 +40,8 @@ export async function POST(request) {
     return json({ error: "Não conseguimos salvar agora. Tente de novo em instantes." }, 500);
   }
   // Pedido já está salvo; se o aviso falhar, ele continua no painel /api/pedidos
-  await notifyWhatsApp(pedidoMessage(pedido, new URL(request.url).origin));
-  return json({ ok: true });
+  const resumo = pedidoMessage(pedido, new URL(request.url).origin);
+  await notifyWhatsApp(resumo); // só envia se o CallMeBot estiver configurado
+  // O resumo volta pro cliente mandar no WhatsApp da loja (links assinados só dos arquivos dele)
+  return json({ ok: true, resumo });
 }
