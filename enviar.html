@@ -334,7 +334,9 @@ $("form").addEventListener("submit", async e => {
   const prog = (t, p) => { $("progressText").textContent = t; $("progressBar").style.width = p + "%"; };
   try {
     const { upload } = await import("https://esm.sh/@vercel/blob@2.8.2/client");
-    const id = Date.now().toString(36);
+    // nome do cliente no arquivo, pra achar fácil no Blob (ex.: selfie-maria-silva-lx3k9a.jpg)
+    const slug = $("nome").value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || "cliente";
+    const id = `${slug}-${Date.now().toString(36)}`;
     prog("Enviando sua selfie…", 5);
     const s = await upload(`envios/selfie-${id}.${ext(selfieFile, "jpg")}`, selfieFile, {
       access: "private", handleUploadUrl: "/api/upload",
