@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kit Hackathon — MeClonei</title>
+<title>Hackathon — MeClonei</title>
 <!-- Página escondida: não indexar e não linkar no site -->
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -44,13 +44,13 @@
 </head>
 <body>
 <div class="wrap">
-  <header><a href="/" class="logo" aria-label="MeClonei">me<b>clonei</b></a><span class="tag">Kit Hackathon</span></header>
+  <header><a href="/" class="logo" aria-label="MeClonei">me<b>clonei</b></a><span class="tag">Hackathon</span></header>
 
   <h1>O pitch do seu time, <span>gravado pelo seu clone.</span></h1>
   <p class="lead">Com uma selfie e 1 minuto de voz, criamos o clone de IA de quem fala pela equipe. Ele grava o vídeo por vocês.</p>
 
   <div class="card">
-    <div class="name">Kit Hackathon · 1 vídeo</div>
+    <div class="name">1 vídeo com seu clone</div>
     <div class="sub">Condição especial só para as equipes do hackathon</div>
     <div class="price"><strong id="price">R$ 59,90</strong><small>Pix, à vista</small></div>
     <div class="note">Pagamento único, sem mensalidade.</div>
@@ -61,7 +61,7 @@
       <li><svg width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></svg>Roteiro escrito por nós, se quiserem</li>
       <li><svg width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></svg>1 revisão incluída · entrega no WhatsApp</li>
     </ul>
-    <a class="btn" id="buy">Quero o kit do meu time →</a>
+    <a class="btn" id="buy">Quero meu vídeo →</a>
     <div class="safe"><span>🔒 Pagamento seguro</span><span>🛡️ Garantia de 7 dias</span></div>
   </div>
 
@@ -70,16 +70,16 @@
 </div>
 
 <script>
-/* CONFIGURAÇÃO — link do checkout do produto "Kit Hackathon" na Kiwify */
+/* CONFIGURAÇÃO — link do checkout do produto de R$ 59,90 (hackathon) na Kiwify */
 const CHECKOUT_URL = "https://pay.kiwify.com.br/SEU-LINK-HACKATHON";
 const WHATSAPP = "5542984117768";
 
 const wa = msg => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
-document.getElementById("wa").href = wa("Olá! Vim pelo Kit Hackathon do MeClonei e tenho uma dúvida.");
+document.getElementById("wa").href = wa("Olá! Vim pela página do hackathon do MeClonei e tenho uma dúvida.");
 const buy = document.getElementById("buy");
 if (/SEU-LINK/.test(CHECKOUT_URL)) {
   // sem link ainda: manda pro WhatsApp em vez de checkout quebrado
-  buy.href = wa("Olá! Quero o Kit Hackathon do MeClonei (1 vídeo por R$ 59,90).");
+  buy.href = wa("Olá! Quero 1 vídeo do MeClonei pela condição do hackathon (R$ 59,90).");
   buy.target = "_blank";
 } else {
   const url = new URL(CHECKOUT_URL);
