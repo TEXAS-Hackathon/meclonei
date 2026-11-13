@@ -76,7 +76,8 @@ export function pedidoMessage(p, origin) {
     `*Roteiro:* ${roteiro}`,
     "",
     `📷 Selfie: ${link(p.selfie)}`,
-    `🎙️ Voz (~${Math.round(p.audioSegundos || 0)}s): ${link(p.audio)}`,
+    `🎙️ Voz (~${Math.round(p.audioSegundos || 0)}s) ouvir: ${link(p.audio)}`,
+    `⬇️ Baixar voz: ${link(p.audio)}&download=1`,
     "",
     `✅ Autorização aceita em ${new Date(p.aceite.dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}`,
   ].join("\n");
