@@ -24,10 +24,11 @@ export function clientIp(request) {
 
 // Chave do painel em ADMIN_KEY (variável de ambiente na Vercel)
 export function isAdmin(request) {
-  const expected = process.env.ADMIN_KEY || "";
-  const given = new URL(request.url).searchParams.get("chave") || "";
+  const expected = Buffer.from(process.env.ADMIN_KEY || "");
+  const given = Buffer.from(new URL(request.url).searchParams.get("chave") || "");
+  // compara em bytes: timingSafeEqual lança erro se os tamanhos diferem
   if (expected.length < 12 || given.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(given), Buffer.from(expected));
+  return timingSafeEqual(given, expected);
 }
 
 // Link assinado para UM arquivo (pode ser encaminhado sem expor o painel inteiro)
@@ -35,10 +36,9 @@ export function signFile(pathname) {
   return createHmac("sha256", process.env.ADMIN_KEY || "").update(pathname).digest("hex").slice(0, 32);
 }
 export function hasFileSig(request, pathname) {
-  const t = new URL(request.url).searchParams.get("t") || "";
-  const expected = signFile(pathname);
-  return (process.env.ADMIN_KEY || "").length >= 12 && t.length === expected.length &&
-    timingSafeEqual(Buffer.from(t), Buffer.from(expected));
+  const t = Buffer.from(new URL(request.url).searchParams.get("t") || "");
+  const expected = Buffer.from(signFile(pathname));
+  return (process.env.ADMIN_KEY || "").length >= 12 && t.length === expected.length && timingSafeEqual(t, expected);
 }
 
 // Avisa no WhatsApp do dono via CallMeBot (CALLMEBOT_PHONE + CALLMEBOT_APIKEY na Vercel)

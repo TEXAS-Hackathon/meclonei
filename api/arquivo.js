@@ -13,6 +13,7 @@ export async function GET(request) {
     headers: {
       "content-type": result.blob.contentType,
       "cache-control": "private, no-store",
+      "x-content-type-options": "nosniff",
       "content-disposition": `inline; filename="${p.split("/").pop()}"`,
     },
   });
