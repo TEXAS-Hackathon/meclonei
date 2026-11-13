@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Envie sua foto e sua voz — MeClonei</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#101322">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Mesmo visual da landing (Manual de Identidade MeClonei V1) */
+  :root{
+    --azul:#2E5BFF; --coral:#FF6A4D; --eco:#7D97FF; --tinta:#101322;
+    --bg:#0c0f1c; --card:#141829; --card2:#191e33; --line:#242a42; --line2:#30375a;
+    --text:#F4F6FB; --muted:#A9B0C7; --dim:#6f7794; --err:#ff8a73;
+    --display:Fredoka,Nunito,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;background-image:radial-gradient(600px 400px at 100% 0,rgba(46,91,255,.22),transparent 70%)}
+  h1,h2{font-family:var(--display);font-weight:600;line-height:1.1;letter-spacing:-.01em}
+  a{color:var(--eco)}
+  .wrap{max-width:640px;margin:0 auto;padding:0 16px 60px}
+  header.top{display:flex;align-items:center;height:60px}
+  .logo{font-family:var(--display);font-weight:400;font-size:24px;color:var(--text);text-decoration:none}
+  .logo b{font-weight:700;color:var(--coral)}
+  .intro{padding:14px 0 22px}
+  .intro h1{font-size:clamp(28px,7vw,40px);margin-bottom:10px}
+  .intro p{color:var(--muted);font-size:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 18px;margin-bottom:14px}
+  .card h2{font-size:20px;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  .card h2 small{font-family:Nunito,sans-serif;font-size:12px;font-weight:800;color:var(--coral);background:rgba(255,106,77,.12);border-radius:999px;padding:2px 9px}
+  .card > p.hint{color:var(--muted);font-size:14px;margin-bottom:14px}
+  label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+  label .opt{color:var(--dim);font-weight:600}
+  input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;font:inherit;font-size:16px;color:var(--text);background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--azul);box-shadow:0 0 0 3px rgba(46,91,255,.25)}
+  textarea{min-height:96px;resize:vertical}
+  input:disabled,textarea:disabled{opacity:.45}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips input{position:absolute;opacity:0;pointer-events:none}
+  .chips label{margin:0;padding:10px 16px;border:1px solid var(--line2);border-radius:999px;background:var(--card2);cursor:pointer;font-size:15px}
+  .chips input:checked + label{border-color:var(--azul);background:rgba(46,91,255,.18)}
+  .chips input:focus-visible + label{box-shadow:0 0 0 3px rgba(46,91,255,.35)}
+  .tips{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .tips li{font-size:13px;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+  .tips li b{color:var(--text)}
+  .drop{display:flex;align-items:center;gap:14px;border:1.5px dashed var(--line2);border-radius:16px;padding:14px;cursor:pointer;background:var(--card2)}
+  .drop:hover{border-color:var(--eco)}
+  .drop .thumb{width:72px;height:72px;border-radius:12px;background:var(--card);display:grid;place-items:center;flex:none;overflow:hidden;color:var(--dim);font-size:28px}
+  .drop .thumb img{width:100%;height:100%;object-fit:cover}
+  .drop b{display:block}
+  .drop span{color:var(--muted);font-size:13px}
+  .tabs{display:flex;gap:6px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:14px}
+  .tabs button{flex:1;font:inherit;font-weight:800;font-size:14px;color:var(--muted);background:none;border:0;border-radius:999px;padding:9px;cursor:pointer}
+  .tabs button.on{background:var(--azul);color:#fff}
+  .script{background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--coral);border-radius:12px;padding:14px;font-size:16px;line-height:1.6;margin-bottom:14px;max-height:220px;overflow:auto}
+  .rec{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .timer{font-family:var(--display);font-size:26px;min-width:70px}
+  .bar{flex:1 1 100%;height:6px;border-radius:6px;background:var(--line2);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--coral);transition:width .3s}
+  .bar.ok i{background:#3ddc84}
+  audio{width:100%;margin-top:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:800;font-size:16px;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;color:#fff;background:var(--azul)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn-ghost{background:rgba(255,255,255,.07);border:1px solid var(--line2);color:var(--text)}
+  .btn-rec{background:var(--coral);color:var(--tinta)}
+  .btn-block{width:100%;padding:17px}
+  .check{display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:14px;margin:0;cursor:pointer}
+  .check input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--azul)}
+  .consent{border-color:var(--line2)}
+  .msg{font-size:13px;margin-top:8px;color:var(--muted)}
+  .msg.err,.form-err{color:var(--err)}
+  .form-err{font-weight:700;margin:12px 0;display:none}
+  .progress{display:none;margin-top:12px}
+  .progress .bar{margin:8px 0 0}
+  .done{display:none;text-align:center;padding:60px 10px}
+  .done .ok{width:84px;height:84px;border-radius:50%;background:var(--azul);display:grid;place-items:center;margin:0 auto 22px;font-size:40px;box-shadow:0 20px 50px -15px rgba(46,91,255,.7)}
+  .done h1{font-size:clamp(30px,8vw,42px);margin-bottom:12px}
+  .done p{color:var(--muted);font-size:17px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  @media (max-width:420px){.row2,.tips{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><a href="/" class="logo" aria-label="MeClonei">me<b>clonei</b></a></header>
+
+  <form id="form" novalidate>
+    <div class="intro">
+      <h1>Pagamento aprovado! <span style="color:var(--coral)">Agora é com o seu clone.</span></h1>
+      <p>Envie uma selfie, um áudio da sua voz e conte sobre o seu produto. Leva uns 5 minutos.</p>
+    </div>
+
+    <!-- 1. Dados -->
+    <section class="card">
+      <h2><small>1</small>Seus dados</h2>
+      <label for="nome">Nome</label>
+      <input id="nome" name="nome" type="text" autocomplete="name" required>
+      <div class="row2">
+        <div><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div><label for="whatsapp">WhatsApp (com DDD)</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="(42) 99999-9999" required></div>
+      </div>
+      <label for="pedido">ID do pedido da Kiwify <span class="opt">(está no e-mail da compra)</span></label>
+      <input id="pedido" name="pedido" type="text">
+      <label>Pacote que você comprou</label>
+      <div class="chips" role="radiogroup" aria-label="Pacote">
+        <input type="radio" name="pacote" id="p10" value="10s"><label for="p10">Vídeo 10s</label>
+        <input type="radio" name="pacote" id="p20" value="20s"><label for="p20">Vídeo 20s</label>
+        <input type="radio" name="pacote" id="p30" value="30s"><label for="p30">Vídeo 30s</label>
+      </div>
+    </section>
+
+    <!-- 2. Selfie -->
+    <section class="card">
+      <h2><small>2</small>Sua selfie</h2>
+      <p class="hint">É dela que sai o rosto do seu clone. Capricha:</p>
+      <ul class="tips">
+        <li><b>De frente</b>, olhando pra câmera</li>
+        <li><b>Boa luz</b>, de preferência natural</li>
+        <li><b>Do peito pra cima</b></li>
+        <li><b>Sem óculos escuros</b>, boné ou filtro</li>
+      </ul>
+      <label class="drop" for="selfie">
+        <span class="thumb" id="selfieThumb">📷</span>
+        <span><b id="selfieName">Escolher foto</b><span>JPG ou PNG, até 10 MB</span></span>
+      </label>
+      <input id="selfie" type="file" accept="image/jpeg,image/png" class="sr">
+      <p class="msg" id="selfieMsg"></p>
+    </section>
+
+    <!-- 3. Voz -->
+    <section class="card">
+      <h2><small>3</small>Sua voz</h2>
+      <p class="hint">Grave pelo menos <b>1 minuto</b> lendo o texto abaixo em voz alta, num lugar silencioso. É assim que seu clone fala igual a você.</p>
+      <div class="tabs" role="tablist">
+        <button type="button" class="on" data-tab="gravar" role="tab" aria-selected="true">Gravar agora</button>
+        <button type="button" data-tab="arquivo" role="tab" aria-selected="false">Enviar arquivo</button>
+      </div>
+      <div class="script" id="script">
+        Oi! Eu tô gravando esse áudio pra criar o meu clone de inteligência artificial. Ele vai usar a minha voz pra apresentar o meu produto e o meu conteúdo nas redes sociais.
+        Eu falo do jeito que eu falo no dia a dia: com calma, com energia e com vontade de ajudar quem tá do outro lado.
+        Hoje eu quero te contar uma novidade. Sabe aquela coisa que você sempre quis resolver e nunca teve tempo? Pois é, eu pensei muito nisso. E cheguei numa solução simples, prática e que cabe na sua rotina.
+        Se você chegou até aqui, já sabe que eu gosto de ir direto ao ponto. Então anota aí: um, dois, três, quatro, cinco. Segunda, terça, quarta, quinta, sexta, sábado e domingo.
+        Obrigado por ouvir até o final. Se gostou, salva esse vídeo e manda pra alguém que precisa ver isso. A gente se vê no próximo!
+      </div>
+      <div id="tab-gravar">
+        <div class="rec">
+          <button type="button" class="btn btn-rec" id="recBtn">● Gravar</button>
+          <span class="timer" id="recTime">0:00</span>
+          <div class="bar" id="recBar"><i></i></div>
+        </div>
+      </div>
+      <div id="tab-arquivo" hidden>
+        <label class="drop" for="audioFile">
+          <span class="thumb">🎙️</span>
+          <span><b id="audioName">Escolher áudio</b><span>MP3, M4A, WAV, OGG… até 30 MB, mínimo 1 minuto</span></span>
+        </label>
+        <input id="audioFile" type="file" accept="audio/*" class="sr">
+      </div>
+      <audio id="audioPreview" controls hidden></audio>
+      <p class="msg" id="audioMsg"></p>
+    </section>
+
+    <!-- 4. Produto -->
+    <section class="card">
+      <h2><small>4</small>Seu produto</h2>
+      <label for="produto">Nome do produto</label>
+      <input id="produto" name="produto" type="text" required>
+      <label for="oQueFaz">O que ele faz?</label>
+      <textarea id="oQueFaz" name="oQueFaz" rows="3" required></textarea>
+      <label for="beneficio">Qual o principal benefício pra quem compra?</label>
+      <textarea id="beneficio" name="beneficio" rows="2" required></textarea>
+    </section>
+
+    <!-- 5. Roteiro e tom -->
+    <section class="card">
+      <h2><small>5</small>Roteiro e tom</h2>
+      <label for="roteiro">Roteiro <span class="opt">(opcional)</span></label>
+      <textarea id="roteiro" name="roteiro" rows="4" placeholder="O que o seu clone deve falar no vídeo"></textarea>
+      <label class="check" style="margin-top:10px"><input type="checkbox" id="querRoteiro"> Quero que vocês escrevam o roteiro</label>
+      <label>Tom do vídeo</label>
+      <div class="chips" role="radiogroup" aria-label="Tom do vídeo">
+        <input type="radio" name="tom" id="t1" value="animado"><label for="t1">🔥 Animado</label>
+        <input type="radio" name="tom" id="t2" value="sério"><label for="t2">🎯 Sério</label>
+        <input type="radio" name="tom" id="t3" value="divertido"><label for="t3">😄 Divertido</label>
+      </div>
+    </section>
+
+    <!-- 6. Autorização -->
+    <section class="card consent">
+      <label class="check"><input type="checkbox" id="aceite" required> Declaro que a foto e a voz enviadas são minhas e autorizo o uso para criar meu clone em IA e os vídeos contratados.</label>
+    </section>
+
+    <p class="form-err" id="formErr" role="alert"></p>
+    <button type="submit" class="btn btn-block" id="submitBtn">Enviar pra criar meu clone</button>
+    <div class="progress" id="progress"><span id="progressText">Enviando…</span><div class="bar"><i id="progressBar"></i></div></div>
+    <p class="msg" style="text-align:center;margin-top:14px">Problema pra enviar? <a id="waHelp" target="_blank" rel="noopener">Fale com a gente no WhatsApp</a></p>
+  </form>
+
+  <div class="done" id="done" role="status">
+    <div class="ok">✓</div>
+    <h1>Recebemos!</h1>
+    <p>Seu vídeo chega em até 48h no seu WhatsApp.</p>
+  </div>
+</div>
+
+<script type="module">
+const WHATSAPP = "5542984117768"; // mesmo número da landing
+const MIN_AUDIO_S = 60;
+const MAX_SELFIE = 10 * 1024 * 1024, MAX_AUDIO = 30 * 1024 * 1024;
+const $ = id => document.getElementById(id);
+
+$("waHelp").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Comprei no MeClonei e tive problema pra enviar minha foto/voz.")}`;
+
+/* Preenche com o que vier na URL (página de obrigado da Kiwify) */
+const q = new URLSearchParams(location.search);
+const pick = (...keys) => keys.map(k => q.get(k)).find(Boolean) || "";
+$("email").value = pick("email", "customer_email");
+$("nome").value = pick("nome", "name", "customer_name");
+$("whatsapp").value = pick("whatsapp", "phone", "customer_phone");
+$("pedido").value = pick("pedido", "order_id", "order", "order_ref", "id");
+const pac = pick("pacote").replace(/\D/g, "");
+if (pac) { const r = document.querySelector(`input[name=pacote][value="${pac}s"]`); if (r) r.checked = true; }
+
+/* Selfie */
+let selfieFile = null;
+$("selfie").addEventListener("change", e => {
+  const f = e.target.files[0]; selfieFile = null; $("selfieMsg").className = "msg"; $("selfieMsg").textContent = "";
+  if (!f) return;
+  if (!["image/jpeg", "image/png"].includes(f.type)) return selfieErr("Use uma foto JPG ou PNG.");
+  if (f.size > MAX_SELFIE) return selfieErr("A foto passou de 10 MB. Tire um print dela ou escolha outra.");
+  selfieFile = f;
+  $("selfieName").textContent = f.name;
+  $("selfieThumb").innerHTML = `<img alt="" src="${URL.createObjectURL(f)}">`;
+});
+function selfieErr(m) { $("selfieMsg").className = "msg err"; $("selfieMsg").textContent = m; $("selfie").value = ""; }
+
+/* Voz: gravar (MediaRecorder) ou enviar arquivo */
+let audioBlob = null, audioSeconds = 0;
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tabs button").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-selected", x === b); });
+  $("tab-gravar").hidden = b.dataset.tab !== "gravar";
+  $("tab-arquivo").hidden = b.dataset.tab !== "arquivo";
+}));
+
+function setAudio(blob, seconds, label) {
+  audioBlob = blob; audioSeconds = seconds;
+  $("audioPreview").src = URL.createObjectURL(blob); $("audioPreview").hidden = false;
+  const ok = seconds >= MIN_AUDIO_S;
+  $("audioMsg").className = ok ? "msg" : "msg err";
+  $("audioMsg").textContent = ok ? `${label} · ${fmt(seconds)} ✓` : `${label} tem ${fmt(seconds)}. Precisa de pelo menos 1 minuto.`;
+}
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+let rec = null, recStart = 0, recTick = null;
+$("recBtn").addEventListener("click", async () => {
+  if (rec && rec.state === "recording") return rec.stop();
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    $("audioMsg").className = "msg err"; $("audioMsg").textContent = "Seu navegador não grava áudio. Use a aba “Enviar arquivo”."; return;
+  }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { $("audioMsg").className = "msg err"; $("audioMsg").textContent = "Permita o acesso ao microfone pra gravar."; return; }
+  const chunks = [];
+  rec = new MediaRecorder(stream);
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    clearInterval(recTick); stream.getTracks().forEach(t => t.stop());
+    $("recBtn").textContent = "● Gravar de novo";
+    setAudio(new Blob(chunks, { type: rec.mimeType || "audio/webm" }), (Date.now() - recStart) / 1000, "Gravação");
+  };
+  rec.start(1000); recStart = Date.now();
+  $("recBtn").textContent = "■ Parar"; $("audioMsg").textContent = ""; $("audioPreview").hidden = true; audioBlob = null;
+  recTick = setInterval(() => {
+    const s = (Date.now() - recStart) / 1000;
+    $("recTime").textContent = fmt(s);
+    $("recBar").querySelector("i").style.width = Math.min(100, s / MIN_AUDIO_S * 100) + "%";
+    $("recBar").classList.toggle("ok", s >= MIN_AUDIO_S);
+  }, 250);
+});
+
+$("audioFile").addEventListener("change", e => {
+  const f = e.target.files[0]; audioBlob = null;
+  if (!f) return;
+  if (!f.type.startsWith("audio/")) { $("audioMsg").className = "msg err"; $("audioMsg").textContent = "Escolha um arquivo de áudio."; return; }
+  if (f.size > MAX_AUDIO) { $("audioMsg").className = "msg err"; $("audioMsg").textContent = "O áudio passou de 30 MB."; return; }
+  $("audioName").textContent = f.name;
+  const a = new Audio(); a.preload = "metadata";
+  a.onloadedmetadata = () => setAudio(f, isFinite(a.duration) ? a.duration : 0, "Áudio");
+  a.onerror = () => { $("audioMsg").className = "msg err"; $("audioMsg").textContent = "Não conseguimos ler esse áudio. Tente MP3 ou M4A."; };
+  a.src = URL.createObjectURL(f);
+});
+
+/* Roteiro opcional */
+$("querRoteiro").addEventListener("change", e => { $("roteiro").disabled = e.target.checked; });
+
+/* Envio */
+function validate() {
+  const v = id => $(id).value.trim();
+  if (!v("nome")) return ["nome", "Informe seu nome."];
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email"))) return ["email", "Confira seu e-mail."];
+  const w = v("whatsapp").replace(/\D/g, "");
+  if (w.length < 10 || w.length > 13) return ["whatsapp", "Confira seu WhatsApp com DDD."];
+  if (!document.querySelector("input[name=pacote]:checked")) return ["p10", "Escolha o pacote que você comprou."];
+  if (!selfieFile) return ["selfie", "Envie sua selfie."];
+  if (!audioBlob) return ["recBtn", "Grave ou envie o áudio da sua voz."];
+  if (audioSeconds < MIN_AUDIO_S) return ["recBtn", "O áudio precisa ter pelo menos 1 minuto."];
+  if (!v("produto") || !v("oQueFaz") || !v("beneficio")) return ["produto", "Preencha as informações do produto."];
+  if (!$("querRoteiro").checked && !v("roteiro")) return ["roteiro", "Escreva o roteiro ou marque “Quero que vocês escrevam”."];
+  if (!document.querySelector("input[name=tom]:checked")) return ["t1", "Escolha o tom do vídeo."];
+  if (!$("aceite").checked) return ["aceite", "Marque a autorização de uso pra continuar."];
+  return null;
+}
+function showErr(id, m) {
+  $("formErr").textContent = m; $("formErr").style.display = "block";
+  const el = $(id); el?.closest(".card")?.scrollIntoView({ behavior: "smooth", block: "center" }); el?.focus?.({ preventScroll: true });
+}
+const ext = (blob, fallback) => ({ "image/jpeg": "jpg", "image/png": "png", "audio/mpeg": "mp3", "audio/mp4": "m4a", "audio/x-m4a": "m4a", "audio/wav": "wav", "audio/x-wav": "wav", "audio/ogg": "ogg", "audio/webm": "webm", "audio/aac": "aac" })[(blob.type || "").split(";")[0]] || fallback;
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("formErr").style.display = "none";
+  const bad = validate();
+  if (bad) return showErr(...bad);
+
+  const btn = $("submitBtn"); btn.disabled = true;
+  $("progress").style.display = "block";
+  const prog = (t, p) => { $("progressText").textContent = t; $("progressBar").style.width = p + "%"; };
+  try {
+    const { upload } = await import("https://esm.sh/@vercel/blob@2.8.2/client");
+    const id = Date.now().toString(36);
+    prog("Enviando sua selfie…", 5);
+    const s = await upload(`envios/selfie-${id}.${ext(selfieFile, "jpg")}`, selfieFile, {
+      access: "private", handleUploadUrl: "/api/upload",
+      onUploadProgress: ev => prog("Enviando sua selfie…", 5 + ev.percentage * .3),
+    });
+    prog("Enviando seu áudio…", 35);
+    const a = await upload(`envios/audio-${id}.${ext(audioBlob, "webm")}`, audioBlob, {
+      access: "private", handleUploadUrl: "/api/upload", multipart: audioBlob.size > 8 * 1024 * 1024,
+      contentType: (audioBlob.type || "audio/webm").split(";")[0],
+      onUploadProgress: ev => prog("Enviando seu áudio…", 35 + ev.percentage * .55),
+    });
+    prog("Finalizando…", 95);
+    const val = id => $(id).value.trim();
+    const res = await fetch("/api/enviar", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        nome: val("nome"), email: val("email"), whatsapp: val("whatsapp"), pedido: val("pedido"),
+        pacote: document.querySelector("input[name=pacote]:checked").value,
+        produto: val("produto"), oQueFaz: val("oQueFaz"), beneficio: val("beneficio"),
+        roteiro: val("roteiro"), querRoteiro: $("querRoteiro").checked,
+        tom: document.querySelector("input[name=tom]:checked").value,
+        selfie: s.pathname, audio: a.pathname, audioSegundos: Math.round(audioSeconds),
+        aceite: $("aceite").checked,
+      }),
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || "Não conseguimos concluir o envio.");
+    prog("Pronto!", 100);
+    $("form").style.display = "none"; $("done").style.display = "block"; window.scrollTo(0, 0);
+  } catch (err) {
+    console.error(err);
+    btn.disabled = false; $("progress").style.display = "none";
+    showErr("submitBtn", (err.message || "Falha no envio.") + " Tente de novo ou fale com a gente no WhatsApp.");
+  }
+});
+</script>
+</body>
+</html>
