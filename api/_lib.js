@@ -6,7 +6,8 @@ export const LIMITS = {
   audio: { types: ["audio/*"], maxBytes: 30 * 1024 * 1024 },
 };
 
-export const PACOTES = ["10s", "20s", "30s"];
+export const PACOTES = ["1", "5", "10", "10s", "20s", "30s"]; // 10s/20s/30s: compras antigas por duração
+export const pacoteLabel = p => (/s$/.test(p) ? `Vídeo ${p}` : `${p} ${p === "1" ? "vídeo" : "vídeos"}`);
 export const TONS = ["animado", "sério", "divertido"];
 export const CONSENT_TEXT =
   "Declaro que a foto e a voz enviadas são minhas e autorizo o uso para criar meu clone em IA e os vídeos contratados.";
@@ -66,7 +67,7 @@ export function pedidoMessage(p, origin) {
     `*WhatsApp:* https://wa.me/${p.whatsapp}`,
     `*E-mail:* ${p.email}`,
     `*Pedido Kiwify:* ${p.pedido || "—"}`,
-    `*Pacote:* Vídeo ${p.pacote}`,
+    `*Pacote:* ${pacoteLabel(p.pacote)}`,
     "",
     `*Produto:* ${p.produto}`,
     `*O que faz:* ${p.oQueFaz}`,

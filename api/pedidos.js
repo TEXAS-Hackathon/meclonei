@@ -1,5 +1,5 @@
 import { get, list } from "@vercel/blob";
-import { esc, isAdmin } from "./_lib.js";
+import { esc, isAdmin, pacoteLabel } from "./_lib.js";
 
 // Painel simples: /api/pedidos?chave=SUA_ADMIN_KEY
 export async function GET(request) {
@@ -27,7 +27,7 @@ export async function GET(request) {
   const fmt = iso => new Date(iso).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const cards = pedidos.filter(Boolean).map(p => `
     <article>
-      <header><b>${esc(p.nome)}</b> · ${esc(p.pacote)} · <small>${esc(fmt(p.recebidoEm))}</small></header>
+      <header><b>${esc(p.nome)}</b> · ${esc(pacoteLabel(p.pacote))} · <small>${esc(fmt(p.recebidoEm))}</small></header>
       <div class="cols">
         <div>
           <p><a href="https://wa.me/${esc(p.whatsapp)}" target="_blank">WhatsApp ${esc(p.whatsapp)}</a> · ${esc(p.email)}</p>

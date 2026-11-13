@@ -378,7 +378,7 @@
 
     <div class="how">
       <ol class="steps" id="steps">
-        <li><button class="step on" data-step="0"><h3><small>1</small>Escolha seu vídeo</h3><p>Vídeo de 10, 20 ou 30 segundos. Pagamento via Pix, à vista, em ambiente seguro.</p></button></li>
+        <li><button class="step on" data-step="0"><h3><small>1</small>Escolha seu pacote</h3><p>1, 5 ou 10 vídeos. Pagamento via Pix, à vista, em ambiente seguro.</p></button></li>
         <li><button class="step" data-step="1"><h3><small>2</small>Envie sua foto e sua voz</h3><p>Depois do pagamento, você envia uma selfie e um áudio de 1 minuto pelo celular. A gente cria seu clone de IA.</p></button></li>
         <li><button class="step" data-step="2"><h3><small>3</small>Receba os vídeos</h3><p>Diga o que seu clone deve falar: seu produto, uma dica, um aviso. Ele grava no formato que viraliza.</p></button></li>
       </ol>
@@ -478,7 +478,7 @@
   <div class="wrap">
     <span class="eyebrow">Preços</span>
     <h2 class="h2">Pague só pelos vídeos que usar. <span class="dim">Sem mensalidade.</span></h2>
-    <p class="sub">Pagamento único. Escolha a duração do vídeo.</p>
+    <p class="sub">Pagamento único. Quanto mais vídeos, menor o preço de cada um.</p>
     <div class="plans" id="plans"></div>
     <div class="every">
       <h3>Incluso em todo vídeo</h3>
@@ -523,7 +523,7 @@
       <details><summary>O que meu clone pode falar nos vídeos?</summary><p>O que você quiser: apresentar seu produto, dar uma dica, contar uma novidade, anunciar uma promoção. Você escreve a ideia ou o roteiro e ele grava.</p></details>
       <details><summary>Em que formato recebo os vídeos?</summary><p>Vídeo vertical (9:16), com legenda dinâmica, pronto pra postar no Instagram, TikTok, YouTube Shorts ou usar em anúncios.</p></details>
       <details><summary>Posso usar a foto de outra pessoa?</summary><p>Não. Você só pode enviar fotos suas ou de alguém que te deu autorização expressa. Não aceitamos imagens de terceiros, celebridades ou menores de idade.</p></details>
-      <details><summary>Como funciona o pagamento?</summary><p>É um pagamento único por vídeo, sem mensalidade. O pagamento é via Pix, à vista, e é aprovado na hora.</p></details>
+      <details><summary>Como funciona o pagamento?</summary><p>É um pagamento único por pacote (1, 5 ou 10 vídeos), sem mensalidade. O pagamento é via Pix, à vista, e é aprovado na hora.</p></details>
       <details><summary>Posso pedir pra mudar o vídeo?</summary><p>Pode. Cada vídeo tem 1 revisão incluída. A partir da segunda revisão, cobramos 50% do valor daquele vídeo.</p></details>
       <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. Pediu reembolso dentro desse prazo, devolvemos seu dinheiro.</p></details>
     </div>
@@ -565,17 +565,17 @@
 <script>
 /* =====================================================================
    CONFIGURAÇÃO — edite só aqui
-   - price: valor em reais (tabela de preços 13/11/2026)
+   - price: valor em reais · videos: quantidade (calcula o preço por vídeo e a economia)
    - checkoutUrl: link do checkout de cada produto na Kiwify
    ===================================================================== */
 window.MECLONEI_CONFIG = {
   plans: [
-    { id: "v10", name: "Vídeo 10s", tagline: "Gancho rápido e anúncio curto", detail: "1 vídeo de até 10 segundos", price: 97,
-      checkoutUrl: "https://pay.kiwify.com.br/eyptfFD" },
-    { id: "v20", name: "Vídeo 20s", tagline: "Pra apresentar seu produto", detail: "1 vídeo de até 20 segundos", price: 187,
-      checkoutUrl: "https://pay.kiwify.com.br/DnXSvrJ" },
-    { id: "v30", name: "Vídeo 30s", tagline: "Pra explicar e convencer", detail: "1 vídeo de até 30 segundos", price: 277,
-      checkoutUrl: "https://pay.kiwify.com.br/XPCmR2Y" }
+    { id: "p1", name: "1 vídeo", tagline: "Pra testar seu clone", detail: "1 vídeo com seu clone", videos: 1, price: 79.90,
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-1-VIDEO" },
+    { id: "p5", name: "5 vídeos", tagline: "Pra postar a semana toda", detail: "5 vídeos com seu clone", videos: 5, price: 299,
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-5-VIDEOS" },
+    { id: "p10", name: "10 vídeos", tagline: "Pra testar criativos no tráfego", detail: "10 vídeos com seu clone", videos: 10, price: 499,
+      badge: "Menor preço por vídeo", checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-10-VIDEOS" }
   ],
   // WhatsApp que recebe os leads: só números, com DDI 55 + DDD. Ex: "5511999998888"
   whatsappNumber: "5542984117768",
@@ -649,12 +649,18 @@ function buildCheckoutUrl(baseUrl, search) {
 function renderPlans() {
   const cfg = window.MECLONEI_CONFIG;
   const el = document.getElementById("plans");
+  const basePer = Math.max(...cfg.plans.map(p => p.price / (p.videos || 1)));
   el.innerHTML = cfg.plans.map(p => {
+    const per = p.price / (p.videos || 1);
+    const savePct = Math.round((1 - per / basePer) * 100);
+    const psave = p.videos > 1
+      ? `Sai a <b style="color:var(--text)">${formatBRL(per)}</b> por vídeo${savePct > 0 ? ` <span class="save">-${savePct}%</span>` : ""}`
+      : "Pagamento único via Pix";
     // Sem checkout configurado, o botão manda pro WhatsApp em vez de link quebrado
     const noCheckout = isPlaceholderCheckout(p.checkoutUrl);
     if (noCheckout) console.warn(`[MeClonei] Link de checkout do plano "${p.name}" ainda é placeholder: botão vai pro WhatsApp.`);
     const ctaAttrs = noCheckout
-      ? `data-wa="Quero o ${p.name} (${formatBRL(p.price)})" data-wa-place="plano-${p.id}" target="_blank" rel="noopener"`
+      ? `data-wa="Quero o pacote de ${p.name} (${formatBRL(p.price)})" data-wa-place="plano-${p.id}" target="_blank" rel="noopener"`
       : `href="${buildCheckoutUrl(p.checkoutUrl, location.search)}"`;
     return `
       <div class="plan reveal ${p.featured ? "featured" : ""}" data-plan="${p.id}">
@@ -662,8 +668,8 @@ function renderPlans() {
         <div class="ptag">${p.tagline || ""}</div>
         <div class="amount"><small>R$</small>${p.price > 0 ? formatBRL(p.price).replace(/^R\$\s?/, "") : "—"}</div>
         <div class="pdetail">${p.detail}</div>
-        <div class="psave">Pagamento único via Pix</div>
-        <a class="btn btn-primary cta" data-plan-cta="${p.id}" ${ctaAttrs}>Quero o ${p.name} <svg width="18" height="18"><use href="#i-arrow"/></svg></a>
+        <div class="psave">${psave}</div>
+        <a class="btn btn-primary cta" data-plan-cta="${p.id}" ${ctaAttrs}>Quero ${p.name} <svg width="18" height="18"><use href="#i-arrow"/></svg></a>
       </div>`;
   }).join("");
 

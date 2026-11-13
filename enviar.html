@@ -104,13 +104,13 @@
         <div><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required></div>
         <div><label for="whatsapp">WhatsApp (com DDD)</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="(42) 99999-9999" required></div>
       </div>
-      <label for="pedido">ID do pedido da Kiwify <span class="opt">(está no e-mail da compra)</span></label>
-      <input id="pedido" name="pedido" type="text">
+      <label for="pedido">Número do pedido <span class="opt">(opcional, se tiver)</span></label>
+      <input id="pedido" name="pedido" type="text" placeholder="Pode deixar em branco">
       <label>Pacote que você comprou</label>
       <div class="chips" role="radiogroup" aria-label="Pacote">
-        <input type="radio" name="pacote" id="p10" value="10s"><label for="p10">Vídeo 10s</label>
-        <input type="radio" name="pacote" id="p20" value="20s"><label for="p20">Vídeo 20s</label>
-        <input type="radio" name="pacote" id="p30" value="30s"><label for="p30">Vídeo 30s</label>
+        <input type="radio" name="pacote" id="pk1" value="1"><label for="pk1">1 vídeo</label>
+        <input type="radio" name="pacote" id="pk5" value="5"><label for="pk5">5 vídeos</label>
+        <input type="radio" name="pacote" id="pk10" value="10"><label for="pk10">10 vídeos</label>
       </div>
     </section>
 
@@ -227,8 +227,12 @@ $("email").value = pick("email", "customer_email");
 $("nome").value = pick("nome", "name", "customer_name");
 $("whatsapp").value = pick("whatsapp", "phone", "customer_phone");
 $("pedido").value = pick("pedido", "order_id", "order", "order_ref", "id");
-const pac = pick("pacote").replace(/\D/g, "");
-if (pac) { const r = document.querySelector(`input[name=pacote][value="${pac}s"]`); if (r) r.checked = true; }
+const pac = pick("pacote");
+// links antigos (?pacote=10s/20s/30s) de quem comprou por duração: mostra o pacote antigo
+if (/^(10|20|30)s$/.test(pac)) {
+  document.querySelector(".chips").insertAdjacentHTML("afterbegin", `<input type="radio" name="pacote" id="pkold" value="${pac}"><label for="pkold">Vídeo ${pac}</label>`);
+}
+const pr = pac && document.querySelector(`input[name=pacote][value="${pac}"]`); if (pr) pr.checked = true;
 
 /* Selfie */
 let selfieFile = null;
@@ -309,7 +313,7 @@ function validate() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email"))) return ["email", "Confira seu e-mail."];
   const w = v("whatsapp").replace(/\D/g, "");
   if (w.length < 10 || w.length > 13) return ["whatsapp", "Confira seu WhatsApp com DDD."];
-  if (!document.querySelector("input[name=pacote]:checked")) return ["p10", "Escolha o pacote que você comprou."];
+  if (!document.querySelector("input[name=pacote]:checked")) return ["pk1", "Escolha o pacote que você comprou."];
   if (!selfieFile) return ["selfie", "Envie sua selfie."];
   if (!audioBlob) return ["recBtn", "Grave ou envie o áudio da sua voz."];
   if (audioSeconds < MIN_AUDIO_S) return ["recBtn", "O áudio precisa ter pelo menos 1 minuto."];
@@ -369,6 +373,8 @@ $("form").addEventListener("submit", async e => {
     prog("Pronto!", 100);
     $("waConfirm").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(out.resumo || "Olá! Acabei de enviar meu pedido no MeClonei.")}`;
     $("form").style.display = "none"; $("done").style.display = "block"; window.scrollTo(0, 0);
+    // Abre o WhatsApp da loja com o pedido pronto; o botão fica na tela caso o navegador bloqueie
+    setTimeout(() => { location.href = $("waConfirm").href; }, 1500);
   } catch (err) {
     console.error(err);
     btn.disabled = false; $("progress").style.display = "none";
