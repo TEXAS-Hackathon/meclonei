@@ -3,32 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Me Clonei — Seu clone de IA grava os vídeos por você</title>
+<title>MeClonei — Seu clone de IA grava os vídeos por você</title>
 <meta name="description" content="Mande uma foto. A gente cria seu clone de IA e ele grava vídeos virais apresentando seu produto ou seu conteúdo. Pague só pelos vídeos que usar.">
-<meta property="og:title" content="Me Clonei — Seu clone de IA grava os vídeos por você">
+<meta property="og:title" content="MeClonei — Seu clone de IA grava os vídeos por você">
 <meta property="og:description" content="1 foto. Vídeos no formato que está viralizando. Sem gravar, sem editar.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#101322">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <!-- Pixels (Meta / TikTok) e WhatsApp: configure em MECLONEI_CONFIG no fim da página -->
 
 <style>
   :root{
-    --bg:#07060d; --bg2:#0e0c19; --card:#13111f; --line:#25213a;
-    --text:#f4f2ff; --muted:#a49fbf;
-    --pink:#ff3d9a; --violet:#8b5cf6; --cyan:#22e4ff; --lime:#c6ff3d;
-    --grad:linear-gradient(100deg,var(--pink),var(--violet) 50%,var(--cyan));
+    --bg:#101322; --bg2:#151a2e; --card:#181d33; --line:#272e4a;
+    --text:#F4F6FB; --muted:#A9B0C7;
+    --pink:#FF6A4D; --violet:#2E5BFF; --cyan:#7D97FF; --lime:#FF6A4D;
+    --grad:var(--violet); /* manual da marca: sem degradê */
     --radius:20px;
-    --display:"Space Grotesk",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --display:Fredoka,Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
   h1,h2,h3,.display{font-family:var(--display);line-height:1.08;letter-spacing:-.02em}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
-  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .grad-text{color:var(--pink)}
   section{padding:88px 0;position:relative}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
   .section-title{font-size:clamp(30px,4.6vw,48px);margin:12px 0 14px}
@@ -37,26 +39,25 @@
 
   /* buttons */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:17px;padding:17px 30px;border-radius:999px;border:0;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease;white-space:nowrap}
-  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 40px -8px rgba(255,61,154,.55),inset 0 1px 0 rgba(255,255,255,.25)}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 50px -8px rgba(139,92,246,.7)}
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 40px -8px rgba(255,106,77,.55),inset 0 1px 0 rgba(255,255,255,.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 50px -8px rgba(46,91,255,.7)}
   .btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text)}
   .btn-ghost:hover{background:rgba(255,255,255,.1)}
 
   /* nav */
-  nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(7,6,13,.72);border-bottom:1px solid rgba(255,255,255,.05)}
+  nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(16,19,34,.78);border-bottom:1px solid rgba(255,255,255,.05)}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
-  .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:21px}
-  .logo-mark{width:32px;height:32px;border-radius:10px;background:var(--grad);display:grid;place-items:center;position:relative}
-  .logo-mark::after{content:"";position:absolute;inset:7px;border:2px solid #fff;border-radius:50%;border-right-color:transparent;transform:rotate(-30deg)}
+  .logo{font-family:var(--display);font-weight:400;font-size:27px;letter-spacing:-.01em;color:var(--text);line-height:1}
+  .logo b{font-weight:700;color:var(--pink)}
   nav .btn{padding:11px 20px;font-size:15px}
 
   /* hero */
   .hero{padding:64px 0 40px;overflow:hidden;position:relative}
-  .hero::before{content:"";position:absolute;width:900px;height:900px;left:50%;top:-420px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(139,92,246,.35),transparent 70%);pointer-events:none}
-  .hero::after{content:"";position:absolute;width:520px;height:520px;right:-160px;top:220px;background:radial-gradient(closest-side,rgba(255,61,154,.25),transparent 70%);pointer-events:none}
+  .hero::before{content:"";position:absolute;width:900px;height:900px;left:50%;top:-420px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(46,91,255,.35),transparent 70%);pointer-events:none}
+  .hero::after{content:"";position:absolute;width:520px;height:520px;right:-160px;top:220px;background:radial-gradient(closest-side,rgba(255,106,77,.25),transparent 70%);pointer-events:none}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;position:relative;z-index:1}
   .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 8px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14px;color:var(--muted)}
-  .pill b{background:var(--lime);color:#111;font-size:11px;padding:3px 8px;border-radius:999px;letter-spacing:.04em}
+  .pill b{background:var(--lime);color:#101322;font-size:11px;padding:3px 8px;border-radius:999px;letter-spacing:.04em}
   .hero h1{font-size:clamp(40px,6.4vw,74px);margin:22px 0 20px}
   .hero p.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:540px}
   .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin:32px 0 26px}
@@ -66,17 +67,17 @@
 
   /* hero visual */
   .visual{position:relative;display:flex;align-items:center;justify-content:center;gap:0;min-height:520px}
-  .photo-card{position:absolute;left:0;top:70px;width:170px;padding:10px;border-radius:18px;background:#fff;color:#111;transform:rotate(-7deg);box-shadow:0 30px 60px -20px rgba(0,0,0,.8);z-index:2}
-  .photo-card .ph{height:190px;border-radius:10px;background:linear-gradient(160deg,#ffd6e8,#d7c8ff);position:relative;overflow:hidden}
+  .photo-card{position:absolute;left:0;top:70px;width:170px;padding:10px;border-radius:18px;background:#fff;color:#101322;transform:rotate(-7deg);box-shadow:0 30px 60px -20px rgba(0,0,0,.8);z-index:2}
+  .photo-card .ph{height:190px;border-radius:10px;background:linear-gradient(160deg,#ffe1da,#dbe3ff);position:relative;overflow:hidden}
   .photo-card .ph svg{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:150px}
-  .scan{position:absolute;left:0;right:0;height:46px;background:linear-gradient(180deg,transparent,rgba(34,228,255,.65),transparent);animation:scan 2.4s ease-in-out infinite}
+  .scan{position:absolute;left:0;right:0;height:46px;background:linear-gradient(180deg,transparent,rgba(125,151,255,.65),transparent);animation:scan 2.4s ease-in-out infinite}
   @keyframes scan{0%{top:-46px}100%{top:190px}}
   .photo-card small{display:block;text-align:center;font-weight:600;font-size:13px;padding-top:8px}
   .clone-tag{position:absolute;left:110px;top:300px;z-index:3;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;box-shadow:0 20px 40px -15px rgba(0,0,0,.8)}
-  .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(198,255,61,.7);animation:pulse 1.6s infinite}
-  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(198,255,61,0)}100%{box-shadow:0 0 0 0 rgba(198,255,61,0)}}
-  .phone{width:270px;height:540px;border-radius:44px;padding:10px;background:linear-gradient(160deg,#2b2740,#0c0b14);box-shadow:0 50px 100px -30px rgba(139,92,246,.6),0 0 0 1px rgba(255,255,255,.08);margin-left:120px;position:relative;z-index:1}
-  .screen{width:100%;height:100%;border-radius:35px;overflow:hidden;position:relative;background:linear-gradient(180deg,#3a1d5c 0%,#7b2a6b 45%,#ff7a59 100%)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(255,106,77,.7);animation:pulse 1.6s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(255,106,77,0)}100%{box-shadow:0 0 0 0 rgba(255,106,77,0)}}
+  .phone{width:270px;height:540px;border-radius:44px;padding:10px;background:linear-gradient(160deg,#272e4a,#0b0e1a);box-shadow:0 50px 100px -30px rgba(46,91,255,.6),0 0 0 1px rgba(255,255,255,.08);margin-left:120px;position:relative;z-index:1}
+  .screen{width:100%;height:100%;border-radius:35px;overflow:hidden;position:relative;background:linear-gradient(180deg,#1a2a80 0%,#2E5BFF 50%,#7D97FF 100%)}
   .screen .person{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:250px;animation:talk 3s ease-in-out infinite}
   @keyframes talk{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
   .rec{position:absolute;top:22px;left:18px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:rgba(0,0,0,.35);padding:5px 10px;border-radius:999px}
@@ -108,9 +109,9 @@
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px;counter-reset:s}
   .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;position:relative;overflow:hidden}
   .step::before{counter-increment:s;content:"0" counter(s);font-family:var(--display);font-weight:700;font-size:64px;position:absolute;right:18px;top:6px;color:rgba(255,255,255,.05)}
-  .step .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(139,92,246,.15);color:var(--violet);margin-bottom:20px}
-  .step:nth-child(2) .ic{background:rgba(255,61,154,.15);color:var(--pink)}
-  .step:nth-child(3) .ic{background:rgba(34,228,255,.13);color:var(--cyan)}
+  .step .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(46,91,255,.15);color:var(--violet);margin-bottom:20px}
+  .step:nth-child(2) .ic{background:rgba(255,106,77,.15);color:var(--pink)}
+  .step:nth-child(3) .ic{background:rgba(125,151,255,.13);color:var(--cyan)}
   .step h3{font-size:22px;margin-bottom:8px}
   .step p{color:var(--muted);font-size:16px}
 
@@ -133,22 +134,23 @@
   .cmp.good li{color:var(--text)}
 
   /* pricing */
-  #planos{background:radial-gradient(800px 400px at 50% 0,rgba(139,92,246,.18),transparent 70%)}
-  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;align-items:stretch}
-  .plan{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:34px 28px 30px;display:flex;flex-direction:column;position:relative}
-  .plan.featured{background:linear-gradient(180deg,#1b1530,#13111f) padding-box,var(--grad) border-box;border:2px solid transparent;transform:scale(1.04);box-shadow:0 40px 90px -30px rgba(255,61,154,.45);z-index:1}
-  .badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--lime);color:#111;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:6px 14px;border-radius:999px;white-space:nowrap}
+  #planos{background:radial-gradient(800px 400px at 50% 0,rgba(46,91,255,.18),transparent 70%)}
+  .plans{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px;align-items:stretch}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:34px 22px 26px;display:flex;flex-direction:column;position:relative}
+  .plan.featured{background:linear-gradient(180deg,#1a2142,#13111f) padding-box,var(--grad) border-box;border:2px solid transparent;box-shadow:0 40px 90px -30px rgba(255,106,77,.45);z-index:1}
+  .badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--lime);color:#101322;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:6px 14px;border-radius:999px;white-space:nowrap}
   .plan .pname{font-family:var(--display);font-size:20px;font-weight:700}
   .plan .ptag{color:var(--muted);font-size:14px;margin-top:2px;min-height:21px}
   .vids{display:flex;align-items:baseline;gap:8px;margin:22px 0 4px}
   .vids strong{font-family:var(--display);font-size:58px;line-height:1}
-  .vids span{font-size:18px;color:var(--muted);font-weight:600}
+  .vids span{font-size:15px;color:var(--muted);font-weight:600}
   .price{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line)}
   .price .amount{font-family:var(--display);font-size:34px;font-weight:700}
   .price .amount small{font-size:16px;color:var(--muted);font-weight:500;margin-right:4px}
   .per-video{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;font-size:14px;color:var(--muted)}
   .per-video b{color:var(--text)}
-  .save{background:rgba(198,255,61,.12);color:var(--lime);font-weight:700;font-size:12px;padding:3px 8px;border-radius:999px}
+  .per-video s{color:var(--muted)}
+  .save{background:rgba(255,106,77,.12);color:var(--lime);font-weight:700;font-size:12px;padding:3px 8px;border-radius:999px}
   .feat{list-style:none;display:grid;gap:11px;margin:24px 0 28px;font-size:15px}
   .feat li{display:flex;gap:10px;align-items:flex-start}
   .feat svg{color:var(--lime);flex:none;margin-top:3px}
@@ -157,12 +159,12 @@
   .plan:not(.featured) .cta:hover{background:rgba(255,255,255,.14)}
   .pay-note{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 22px;margin-top:38px;color:var(--muted);font-size:14px}
   .pay-note span{display:inline-flex;align-items:center;gap:7px}
-  .after-pay{max-width:760px;margin:30px auto 0;display:flex;gap:14px;align-items:center;padding:16px 20px;border-radius:16px;background:rgba(34,228,255,.06);border:1px solid rgba(34,228,255,.25);font-size:15px;color:#cdf8ff}
+  .after-pay{max-width:760px;margin:30px auto 0;display:flex;gap:14px;align-items:center;padding:16px 20px;border-radius:16px;background:rgba(125,151,255,.06);border:1px solid rgba(125,151,255,.25);font-size:15px;color:#dfe5ff}
   .after-pay svg{flex:none;color:var(--cyan)}
 
   /* guarantee */
   .guarantee{display:flex;gap:32px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:40px}
-  .seal{flex:none;width:130px;height:130px;border-radius:50%;background:var(--grad);display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:700;color:#fff;line-height:1;box-shadow:0 20px 50px -15px rgba(255,61,154,.6)}
+  .seal{flex:none;width:130px;height:130px;border-radius:50%;background:var(--grad);display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:700;color:#fff;line-height:1;box-shadow:0 20px 50px -15px rgba(255,106,77,.6)}
   .seal strong{font-size:44px;display:block}
   .seal span{font-size:13px;letter-spacing:.08em;text-transform:uppercase}
   .guarantee h3{font-size:28px;margin-bottom:8px}
@@ -178,7 +180,7 @@
   details p{color:var(--muted);padding-bottom:20px}
 
   /* final */
-  .final{text-align:center;border-radius:32px;padding:72px 24px;background:radial-gradient(600px 300px at 50% 0,rgba(255,61,154,.35),transparent 70%),linear-gradient(180deg,#1a1430,#0e0c19);border:1px solid var(--line);overflow:hidden}
+  .final{text-align:center;border-radius:32px;padding:72px 24px;background:radial-gradient(600px 300px at 50% 0,rgba(255,106,77,.35),transparent 70%),linear-gradient(180deg,#18204a,#0e0c19);border:1px solid var(--line);overflow:hidden}
   .final h2{font-size:clamp(32px,5vw,56px);margin-bottom:14px}
   .final p{color:var(--muted);font-size:18px;margin-bottom:32px}
 
@@ -214,15 +216,16 @@
     .clone-tag{left:calc(50% - 200px)}
     .float-stat{right:calc(50% - 250px)}
     .uses{grid-template-columns:repeat(2,1fr)}
-    .plans{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto}
+    .plans{grid-template-columns:repeat(2,1fr);max-width:760px;margin-left:auto;margin-right:auto;gap:28px 18px}
     .plan.featured{transform:none;order:-1}
   }
   @media (max-width:720px){
     section{padding:64px 0}
-    .steps,.compare{grid-template-columns:1fr}
+    .steps,.compare,.plans{grid-template-columns:1fr}
+    .plans{max-width:440px}
     .guarantee{flex-direction:column;text-align:center;padding:32px 24px}
     nav .btn{display:none}
-    .sticky-cta{display:flex;position:fixed;left:12px;right:84px;bottom:12px;z-index:50;box-shadow:0 10px 40px rgba(0,0,0,.6),0 10px 40px -8px rgba(255,61,154,.55)}
+    .sticky-cta{display:flex;position:fixed;left:12px;right:84px;bottom:12px;z-index:50;box-shadow:0 10px 40px rgba(0,0,0,.6),0 10px 40px -8px rgba(255,106,77,.55)}
     .wa-float{right:12px;bottom:12px;width:58px;height:58px}
     .phone{width:230px;height:460px;border-radius:38px}
     .screen{border-radius:30px}
@@ -275,8 +278,8 @@
 
 <nav>
   <div class="wrap">
-    <a href="#" class="logo"><span class="logo-mark"></span>Me Clonei</a>
-    <a href="#planos" class="btn btn-primary">Ver pacotes</a>
+    <a href="#" class="logo" aria-label="MeClonei">me<b>clonei</b></a>
+    <a href="#planos" class="btn btn-primary">Ver preços</a>
   </div>
 </nav>
 
@@ -339,8 +342,8 @@
     <div class="steps" style="text-align:left">
       <div class="step reveal">
         <div class="ic"><svg width="26" height="26"><use href="#i-cart"/></svg></div>
-        <h3>Escolha seu pacote</h3>
-        <p>Você paga só pela quantidade de vídeos que quer. Pix, cartão ou boleto, em ambiente seguro.</p>
+        <h3>Escolha seu vídeo</h3>
+        <p>Vídeo de 10, 20 ou 30 segundos, ou o combo com os três. Pix, cartão ou boleto, em ambiente seguro.</p>
       </div>
       <div class="step reveal">
         <div class="ic"><svg width="26" height="26"><use href="#i-camera"/></svg></div>
@@ -386,7 +389,7 @@
         </ul>
       </div>
       <div class="cmp good reveal">
-        <h3>🚀 Com o Me Clonei</h3>
+        <h3>🚀 Com o MeClonei</h3>
         <ul>
           <li><svg width="18" height="18"><use href="#i-check"/></svg>Só uma foto, uma vez</li>
           <li><svg width="18" height="18"><use href="#i-check"/></svg>Seu clone grava enquanto você trabalha</li>
@@ -401,9 +404,9 @@
 <!-- PLANOS -->
 <section id="planos">
   <div class="wrap center">
-    <span class="eyebrow">Pacotes</span>
+    <span class="eyebrow">Preços</span>
     <h2 class="section-title">Pague só pelos <span class="grad-text">vídeos que usar</span></h2>
-    <p class="section-sub">Pagamento único, sem mensalidade. Quanto maior o pacote, mais barato sai cada vídeo.</p>
+    <p class="section-sub">Pagamento único, sem mensalidade. Escolha a duração do vídeo ou leve o combo com os três formatos.</p>
     <div class="plans" id="plans" style="text-align:left"></div>
     <div class="after-pay">
       <svg width="24" height="24"><use href="#i-info"/></svg>
@@ -437,16 +440,17 @@
     <h2 class="section-title">Perguntas frequentes</h2>
     <div class="faq" style="text-align:left">
       <details><summary>Preciso gravar alguma coisa?</summary><p>Não. Você só envia uma foto sua. A partir dela criamos seu clone de IA, que fala e se movimenta nos vídeos.</p></details>
-      <details><summary>Quando eu envio minha foto?</summary><p>Logo depois do pagamento. Assim que a compra é aprovada, você é redirecionado pro sistema do Me Clonei, onde faz o envio da foto e pede seus vídeos.</p></details>
+      <details><summary>Quando eu envio minha foto?</summary><p>Logo depois do pagamento. Assim que a compra é aprovada, você é redirecionado pro sistema do MeClonei, onde faz o envio da foto e pede seus vídeos.</p></details>
       <details><summary>O que meu clone pode falar nos vídeos?</summary><p>O que você quiser: apresentar seu produto, dar uma dica, contar uma novidade, anunciar uma promoção. Você escreve a ideia ou o roteiro e ele grava.</p></details>
       <details><summary>Em que formato recebo os vídeos?</summary><p>Vídeo vertical (9:16), com legenda dinâmica, pronto pra postar no Instagram, TikTok, YouTube Shorts ou usar em anúncios.</p></details>
       <details><summary>Posso usar a foto de outra pessoa?</summary><p>Não. Você só pode enviar fotos suas ou de alguém que te deu autorização expressa. Não aceitamos imagens de terceiros, celebridades ou menores de idade.</p></details>
-      <details><summary>Como funciona o pagamento?</summary><p>É um pagamento único por pacote, sem mensalidade. Aceitamos Pix, cartão de crédito (com parcelamento) e boleto.</p></details>
+      <details><summary>Como funciona o pagamento?</summary><p>É um pagamento único por vídeo ou pelo combo, sem mensalidade. Aceitamos Pix, cartão de crédito (com parcelamento) e boleto.</p></details>
+      <details><summary>Posso pedir pra mudar o vídeo?</summary><p>Pode. Cada vídeo tem 1 revisão incluída. A partir da segunda revisão, cobramos 50% do valor daquele vídeo.</p></details>
       <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. Pediu reembolso dentro desse prazo, devolvemos seu dinheiro.</p></details>
     </div>
     <div class="wa-help">
       <span>Ficou alguma dúvida? Fala direto com a gente.</span>
-      <a class="btn btn-wa" data-wa="Tenho uma dúvida sobre o Me Clonei" data-wa-place="faq" target="_blank" rel="noopener"><svg width="22" height="22"><use href="#i-wa"/></svg>Chamar no WhatsApp</a>
+      <a class="btn btn-wa" data-wa="Tenho uma dúvida sobre o MeClonei" data-wa-place="faq" target="_blank" rel="noopener"><svg width="22" height="22"><use href="#i-wa"/></svg>Chamar no WhatsApp</a>
     </div>
   </div>
 </section>
@@ -458,7 +462,7 @@
       <h2>Seu próximo vídeo pode estar<br><span class="grad-text">pronto hoje.</span></h2>
       <p>Sem câmera. Sem edição. Só uma foto.</p>
       <div class="ctas">
-        <a href="#planos" class="btn btn-primary">Escolher meu pacote <svg width="20" height="20"><use href="#i-arrow"/></svg></a>
+        <a href="#planos" class="btn btn-primary">Escolher meu vídeo <svg width="20" height="20"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-ghost" data-wa="Quero saber mais sobre o clone de IA" data-wa-place="cta-final" target="_blank" rel="noopener"><svg width="20" height="20"><use href="#i-wa"/></svg>Falar no WhatsApp</a>
       </div>
     </div>
@@ -468,11 +472,11 @@
 <footer>
   <div class="wrap">
     <div class="row">
-      <a href="#" class="logo"><span class="logo-mark"></span>Me Clonei</a>
-      <div class="links"><a href="termos.html">Termos de uso</a><a href="privacidade.html">Privacidade</a><a data-wa="Preciso de ajuda com o Me Clonei" data-wa-place="footer" target="_blank" rel="noopener">Contato</a></div>
+      <a href="#" class="logo" aria-label="MeClonei">me<b>clonei</b></a>
+      <div class="links"><a href="termos.html">Termos de uso</a><a href="privacidade.html">Privacidade</a><a data-wa="Preciso de ajuda com o MeClonei" data-wa-place="footer" target="_blank" rel="noopener">Contato</a></div>
     </div>
     <p class="consent">Ao comprar, você declara que enviará apenas imagens próprias ou de pessoas que autorizaram expressamente o uso, e que os vídeos gerados não serão usados para enganar, difamar ou se passar por terceiros. Os vídeos são criados por inteligência artificial.</p>
-    <p>© <span id="year"></span> Me Clonei. Todos os direitos reservados.</p>
+    <p>© <span id="year"></span> MeClonei. Todos os direitos reservados.</p>
   </div>
 </footer>
 
@@ -482,21 +486,26 @@
 <script>
 /* =====================================================================
    CONFIGURAÇÃO — edite só aqui
-   - price: valor em reais (placeholder até vocês definirem)
+   - price: valor em reais (tabela de preços 13/11/2026)
+   - includes: no combo, ids dos vídeos inclusos (calcula o "De R$ X" e o desconto)
    - checkoutUrl: link do checkout de cada produto na Kiwify
    - Na Kiwify, configure a "Página de obrigado" para a URL de upload do sistema
    ===================================================================== */
 window.MECLONEI_CONFIG = {
   plans: [
-    { id: "starter", name: "Starter", tagline: "Pra testar seu clone",     videos: 5,  price: 47,  installments: 5,  featured: false,
-      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-STARTER",
-      features: ["5 vídeos com seu clone", "Clone criado a partir de 1 foto", "Legenda dinâmica", "Formato vertical 9:16"] },
-    { id: "pro",     name: "Pro",     tagline: "Pra postar a semana toda", videos: 15, price: 97,  installments: 10, featured: true,
-      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-PRO",
-      features: ["15 vídeos com seu clone", "Clone criado a partir de 1 foto", "Legenda dinâmica", "Formato vertical 9:16", "Ideal pra criativos de anúncio"] },
-    { id: "escala",  name: "Escala",  tagline: "Pra quem vive de conteúdo", videos: 40, price: 197, installments: 12, featured: false,
-      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-ESCALA",
-      features: ["40 vídeos com seu clone", "Clone criado a partir de 1 foto", "Legenda dinâmica", "Formato vertical 9:16", "Menor preço por vídeo"] }
+    { id: "v10", name: "Vídeo 10s", tagline: "Gancho rápido e anúncio curto", big: "10s", bigLabel: "de vídeo", price: 97,
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-10S",
+      features: ["1 vídeo de até 10 segundos", "Clone criado a partir de 1 foto", "Fala com lip sync", "Legenda dinâmica · vertical 9:16", "1 revisão incluída"] },
+    { id: "v20", name: "Vídeo 20s", tagline: "Pra apresentar seu produto", big: "20s", bigLabel: "de vídeo", price: 187,
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-20S",
+      features: ["1 vídeo de até 20 segundos", "Clone criado a partir de 1 foto", "Fala com lip sync", "Legenda dinâmica · vertical 9:16", "1 revisão incluída"] },
+    { id: "v30", name: "Vídeo 30s", tagline: "Pra explicar e convencer", big: "30s", bigLabel: "de vídeo", price: 277,
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-30S",
+      features: ["1 vídeo de até 30 segundos", "Clone criado a partir de 1 foto", "Fala com lip sync", "Legenda dinâmica · vertical 9:16", "1 revisão incluída"] },
+    { id: "combo", name: "Combo", tagline: "Os 3 formatos pra testar no tráfego", big: "3", bigLabel: "vídeos · 10s + 20s + 30s", price: 497,
+      includes: ["v10", "v20", "v30"], featured: true, badge: "Melhor custo",
+      checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-COMBO",
+      features: ["1 vídeo de 10s, 1 de 20s e 1 de 30s", "Clone criado a partir de 1 foto", "Fala com lip sync", "Legenda dinâmica · vertical 9:16", "1 revisão incluída em cada vídeo"] }
   ],
   // WhatsApp que recebe os leads: só números, com DDI 55 + DDD. Ex: "5511999998888"
   whatsappNumber: "55DDDNUMERO",
@@ -538,12 +547,12 @@ function leadOrigin() {
 
 function waLink(message) {
   const origin = leadOrigin();
-  const text = `Olá! Vim pelo site do Me Clonei. ${message}.` + (origin ? `\n\n(ref: ${origin})` : "");
+  const text = `Olá! Vim pelo site do MeClonei. ${message}.` + (origin ? `\n\n(ref: ${origin})` : "");
   return `https://wa.me/${MECLONEI_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
 }
 
 function setupWhatsApp() {
-  if (!/^\d{12,13}$/.test(MECLONEI_CONFIG.whatsappNumber)) console.warn("[Me Clonei] whatsappNumber não configurado (formato 55DDDNUMERO).");
+  if (!/^\d{12,13}$/.test(MECLONEI_CONFIG.whatsappNumber)) console.warn("[MeClonei] whatsappNumber não configurado (formato 55DDDNUMERO).");
   document.querySelectorAll("[data-wa]").forEach(a => {
     a.href = waLink(a.dataset.wa);
     a.addEventListener("click", () => track("Lead", { content_name: "whatsapp-" + (a.dataset.waPlace || "") }));
@@ -571,30 +580,28 @@ function renderPlans() {
   const cfg = window.MECLONEI_CONFIG;
   const el = document.getElementById("plans");
   const check = '<svg width="18" height="18"><use href="#i-check"/></svg>';
-  const valid = cfg.plans.filter(p => p.price > 0 && p.videos > 0);
-  const basePer = valid.length ? Math.max(...valid.map(p => p.price / p.videos)) : 0;
-
   el.innerHTML = cfg.plans.map(p => {
-    const per = p.videos > 0 ? p.price / p.videos : NaN;
-    const savePct = basePer > 0 && per > 0 ? Math.round((1 - per / basePer) * 100) : 0;
-    const inst = p.installments > 1 && p.price > 0
-      ? `<div class="per-video">ou em até <b>${p.installments}x</b> no cartão</div>` : "";
+    // Combo: "De R$ X" = soma dos vídeos avulsos inclusos
+    const full = (p.includes || []).reduce((s, id) => s + (cfg.plans.find(x => x.id === id)?.price || 0), 0);
+    const savePct = full > p.price ? Math.round((1 - p.price / full) * 100) : 0;
+    const priceNote = savePct > 0
+      ? `<div class="per-video">Avulso sairia <s>${formatBRL(full)}</s> <span class="save">-${savePct}%</span></div>`
+      : `<div class="per-video">Pagamento único por vídeo</div>`;
     // Sem checkout configurado, o botão manda pro WhatsApp em vez de link quebrado
     const noCheckout = isPlaceholderCheckout(p.checkoutUrl);
-    if (noCheckout) console.warn(`[Me Clonei] Link de checkout do plano "${p.name}" ainda é placeholder: botão vai pro WhatsApp.`);
+    if (noCheckout) console.warn(`[MeClonei] Link de checkout do plano "${p.name}" ainda é placeholder: botão vai pro WhatsApp.`);
     const ctaAttrs = noCheckout
-      ? `data-wa="Quero o pacote ${p.name} (${p.videos} vídeos)" data-wa-place="plano-${p.id}" target="_blank" rel="noopener"`
+      ? `data-wa="Quero o ${p.name} (${formatBRL(p.price)})" data-wa-place="plano-${p.id}" target="_blank" rel="noopener"`
       : `href="${buildCheckoutUrl(p.checkoutUrl, location.search)}"`;
     return `
       <div class="plan reveal ${p.featured ? "featured" : ""}" data-plan="${p.id}">
-        ${p.featured ? '<span class="badge">Mais vendido</span>' : ""}
+        ${p.badge ? `<span class="badge">${p.badge}</span>` : ""}
         <div class="pname">${p.name}</div>
         <div class="ptag">${p.tagline || ""}</div>
-        <div class="vids"><strong>${p.videos}</strong><span>vídeos</span></div>
+        <div class="vids"><strong>${p.big}</strong><span>${p.bigLabel}</span></div>
         <div class="price">
           <div class="amount"><small>R$</small>${p.price > 0 ? formatBRL(p.price).replace(/^R\$\s?/, "") : "—"}</div>
-          <div class="per-video">Sai a <b class="pv">${formatBRL(per)}</b> por vídeo ${savePct > 0 ? `<span class="save">-${savePct}%</span>` : ""}</div>
-          ${inst}
+          ${priceNote}
         </div>
         <ul class="feat">${p.features.map(f => `<li>${check}${f}</li>`).join("")}</ul>
         <a class="btn btn-primary cta" data-plan-cta="${p.id}" ${ctaAttrs}>Quero o ${p.name} <svg width="20" height="20"><use href="#i-arrow"/></svg></a>
